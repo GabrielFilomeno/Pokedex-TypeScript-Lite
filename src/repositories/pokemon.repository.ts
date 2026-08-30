@@ -1,17 +1,15 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import type { Pokemon } from "../models/pokemon.model.js";
+import { Pokemon } from "../models/pokemon.model.js";
 import { PokemonAlreadyExistsError } from "../shared/errors/pokemon-already-exists.error.js";
 import { PokemonNotFoundError } from "../shared/errors/pokemon-not-found.error.js";
 import { IdOrNameNotSendError } from "../shared/errors/id-or-name-not-send.error.js";
 
-export interface SavedPokemon extends Pokemon {}
-
 const FILE_PATH = path.resolve(process.cwd(), "pc_box.json");
 
 export class BoxService {
-  private pokemons: SavedPokemon[] = [];
+  private pokemons: Pokemon[] = [];
 
   async init(): Promise<void> {
     if (existsSync(FILE_PATH)) {
@@ -29,11 +27,11 @@ export class BoxService {
     }
   }
 
-  getAll(): SavedPokemon[] {
+  getAll(): Pokemon[] {
     return this.pokemons;
   }
 
-  async add(pokemon: SavedPokemon): Promise<void> {
+  async add(pokemon: Pokemon): Promise<void> {
     const alreadyExists = this.pokemons.some((p) => p.id === pokemon.id);
     if (alreadyExists) {
       throw new PokemonAlreadyExistsError(pokemon.id, pokemon.name);
