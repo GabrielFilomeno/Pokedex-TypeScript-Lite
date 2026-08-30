@@ -1,5 +1,6 @@
 import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
+import { BoxService } from "./repositories/pokemon.repository.js";
 
 const terminalControl = readline.createInterface({ input, output });
 
@@ -21,6 +22,9 @@ function showMenu(): void {
 }
 
 async function main(): Promise<void> {
+  const boxService = new BoxService();
+  await boxService.init();
+
   let running = true;
   showWelcome();
 

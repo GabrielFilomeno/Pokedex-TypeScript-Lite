@@ -1,4 +1,4 @@
-import type { PokemonPokeApi } from '../shared/poke-api.interface.js';
+import type { PokemonPokeApi } from '../shared/interfaces/poke-api.interface.js';
 import type { Pokemon } from '../models/pokemon.model.js';
 
 export class PokemonMapper {
