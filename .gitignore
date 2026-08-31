@@ -9,3 +9,6 @@ out/
 
 # Variáveis de ambiente e segredos
 .env
+
+# Dados locais e persistência
+pc_box.json
