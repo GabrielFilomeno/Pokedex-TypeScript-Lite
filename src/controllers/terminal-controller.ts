@@ -174,6 +174,7 @@ export class TerminalController {
     }
 
     console.log(`Total de Pokémons salvos: ${savedPokemons.length}\n`);
+    
     savedPokemons.sort((a, b) => a.id - b.id);
     savedPokemons.forEach((pokemon) => {
       const formattedPokemon = pokemon.getFormattedPokemon();
@@ -182,6 +183,88 @@ export class TerminalController {
       const separator = "_".repeat(formattedPokemon.length);
       console.log(separator + '|')
     });
+  }
+
+  async handleRemovePokemon(): Promise<{ shouldExit: boolean }> {
+    let removing = true;
+
+    while (removing) {
+      console.clear();
+      console.log("==========================================");
+      console.log("       🗑️  REMOVER POKÉMON SALVO          ");
+      console.log("==========================================");
+      console.log("Digite o Nome ou ID do Pokémon que deseja remover (ou digite '0' para voltar)\n");
+
+      const input = await this.terminalControl.question("👉 Digite o Nome ou ID: ");
+      const query = input.trim();
+
+      if (query === "0") {
+        return { shouldExit: false };
+      }
+
+      if (!query) {
+        console.log("\n⚠️ Por favor, digite um nome ou ID válido.");
+        await this.pressEnterToContinue();
+        continue;
+      }
+
+      try {
+        const idNumber = Number(query);
+        const isId = !isNaN(idNumber) && Number.isInteger(idNumber) && idNumber > 0;
+
+        if (isId) {
+          await this.boxService.removeByIdOrName(idNumber, undefined);
+        } else {
+          await this.boxService.removeByIdOrName(undefined, query);
+        }
+
+        console.log(`\n✅ Pokémon "${query}" foi removido com sucesso da Pokédex!`);
+        await this.pressEnterToContinue();
+        return { shouldExit: false };
+      } catch (error) {
+        console.log();
+        if (error instanceof PokemonNotFoundError) {
+          console.log(`❌ ${error.message}`);
+        } else if (error instanceof IdOrNameNotSendError) {
+          console.log(`⚠️ ${error.message}`);
+        } else if (error instanceof Error) {
+          console.log(`❌ Erro ao remover Pokémon: ${error.message}`);
+        } else {
+          console.log("❌ Ocorreu um erro inesperado ao remover o Pokémon.");
+        }
+
+        console.log();
+        let choosing = true;
+        while (choosing) {
+          console.log("---------------- OPÇÕES ------------------");
+          console.log("1. Tentar novamente");
+          console.log("2. Voltar para a tela inicial");
+          console.log("0. Finalizar execução");
+          console.log("------------------------------------------");
+
+          const option = await this.terminalControl.question("👉 Escolha uma opção: ");
+          console.log();
+
+          switch (option.trim()) {
+            case "1":
+              choosing = false;
+              break;
+
+            case "2":
+              return { shouldExit: false };
+
+            case "0":
+              return { shouldExit: true };
+
+            default:
+              console.log("❌ Opção inválida! Escolha 1, 2 ou 0.\n");
+              break;
+          }
+        }
+      }
+    }
+
+    return { shouldExit: false };
   }
 
   private async pressEnterToContinue(): Promise<void> {
