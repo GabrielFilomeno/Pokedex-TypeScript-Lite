@@ -52,10 +52,14 @@ async function main(): Promise<void> {
         terminalController.handleListSavedPokemons();
         break;
 
-      case "3":
-        //TODO: Implementar a remoção de Pokémons Salvos por Nome ou ID
-        console.log("➕ [Em breve] Removendo Pokémon Salvo por Nome ou ID...");
+      case "3": {
+        const { shouldExit } = await terminalController.handleRemovePokemon();
+        if (shouldExit) {
+          console.log("👋 Saindo da Pokédex... Até a próxima, Treinador!");
+          running = false;
+        }
         break;
+      }
 
       case "0":
         console.log("👋 Saindo da Pokédex... Até a próxima, Treinador!");
@@ -67,7 +71,7 @@ async function main(): Promise<void> {
         break;
     }
 
-    if (running && answer.trim() !== "1") {
+    if (running && answer.trim() !== "1" && answer.trim() !== "3") {
       await terminalControl.question("\nPressione [ENTER] para continuar...");
       console.clear();
     } else if (running) {
