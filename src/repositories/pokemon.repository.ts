@@ -15,7 +15,8 @@ export class BoxService {
     if (existsSync(FILE_PATH)) {
       try {
         const data = await readFile(FILE_PATH, "utf-8");
-        this.pokemons = data.trim() ? JSON.parse(data) : [];
+        const parsed = data.trim() ? JSON.parse(data) : [];
+        this.pokemons = Array.isArray(parsed) ? parsed.map((p) => new Pokemon(p)) : [];
       } catch (error) {
         console.warn("⚠️ Arquivo de dados inválido ou corrompido. Reiniciando memória local.");
         this.pokemons = [];

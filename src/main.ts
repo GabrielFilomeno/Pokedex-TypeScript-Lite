@@ -2,6 +2,8 @@ import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { BoxService } from "./repositories/pokemon.repository.js";
 
+import { TerminalController } from "./controllers/terminal-controller.js";
+
 const terminalControl = readline.createInterface({ input, output });
 
 function showWelcome(): void {
@@ -25,6 +27,8 @@ async function main(): Promise<void> {
   const boxService = new BoxService();
   await boxService.init();
 
+  const terminalController = new TerminalController(terminalControl, boxService);
+
   let running = true;
   showWelcome();
 
@@ -35,10 +39,14 @@ async function main(): Promise<void> {
     console.log();
 
     switch (answer.trim()) {
-      case "1":
-        //TODO: Implementar a busca de Pokémons na PokeApi
-        console.log("🔎 [Em breve] Buscando Pokémon por Nome ou ID na PokeApi...");
+      case "1": {
+        const { shouldExit } = await terminalController.handleSearchPokemon();
+        if (shouldExit) {
+          console.log("👋 Saindo da Pokédex... Até a próxima, Treinador!");
+          running = false;
+        }
         break;
+      }
 
       case "2":
         //TODO: Implementar a listagem de Pokémons Salvos
@@ -60,8 +68,10 @@ async function main(): Promise<void> {
         break;
     }
 
-    if (running) {
+    if (running && answer.trim() !== "1") {
       await terminalControl.question("\nPressione [ENTER] para continuar...");
+      console.clear();
+    } else if (running) {
       console.clear();
     }
   }
