@@ -28,7 +28,10 @@ export class BoxService {
     }
   }
 
-  getAll(): Pokemon[] {
+  getAll(): Pokemon[] | null {
+    if (this.pokemons.length === 0) {
+      return null;
+    }
     return this.pokemons;
   }
 
