@@ -49,8 +49,7 @@ async function main(): Promise<void> {
       }
 
       case "2":
-        //TODO: Implementar a listagem de Pokémons Salvos
-        console.log("🔍 [Em breve] Listando Pokémons Salvos...");
+        terminalController.handleListSavedPokemons();
         break;
 
       case "3":

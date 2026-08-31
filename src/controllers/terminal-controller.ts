@@ -157,6 +157,33 @@ export class TerminalController {
     return { action: "go_home" };
   }
 
+  handleListSavedPokemons(): void {
+    console.clear();
+    console.log("==========================================");
+    console.log("       📋 POKÉMONS SALVOS NA POKÉDEX      ");
+    console.log("==========================================");
+
+    const savedPokemons = this.boxService.getAll();
+
+    if (!savedPokemons) {
+      console.log("⚠️ A sua Pokédex está vazia!");
+      console.log("\n💡 Para adicionar novos Pokémons:");
+      console.log("   1. Escolha a opção '1' no menu principal (Buscar Pokémon por Nome ou ID na PokeApi).");
+      console.log("   2. Após encontrar o Pokémon, selecione a opção '1' (Salvar Pokémon).");
+      return;
+    }
+
+    console.log(`Total de Pokémons salvos: ${savedPokemons.length}\n`);
+    savedPokemons.sort((a, b) => a.id - b.id);
+    savedPokemons.forEach((pokemon) => {
+      const formattedPokemon = pokemon.getFormattedPokemon();
+      console.log(' '.repeat(formattedPokemon.length) + '|')
+      console.log(formattedPokemon + '| ');
+      const separator = "_".repeat(formattedPokemon.length);
+      console.log(separator + '|')
+    });
+  }
+
   private async pressEnterToContinue(): Promise<void> {
     await this.terminalControl.question("\nPressione [ENTER] para continuar...");
   }
