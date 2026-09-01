@@ -1,0 +1,14 @@
+# Dependências
+node_modules/
+
+# Build e saída de compilação
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Variáveis de ambiente e segredos
+.env
+
+# Dados locais e persistência
+pc_box.json
