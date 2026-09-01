@@ -52,13 +52,121 @@ npm run dev
 - **🗑️ Remover Pokémon:** Remove Pokémons da sua Pokédex local e em memória por Nome ou ID.
 - **🛡️ Tratamento de Erros:** Validações de entradas, tratativas de Pokémon duplicado, não encontrado ou falhas de conexão.
 
-## 🧠 Conceitos aplicados
+## 💻 Exemplos de uso
 
-- **Arquitetura em Camadas:** Separação clara entre `Controllers`, `Services`, `Repositories`, `Models`, `Utils` e `Shared`.
-- **Tipagem Estática e Interfaces:** Modelagem dos dados da API e das entidades internas.
-- **Erros Customizados:** Classes de erros personalizadas para fluxos de exceção claros.
-- **Persistência de Dados:** Leitura e gravação assíncrona de arquivos JSON com `node:fs/promises`.
-- **Consumo de API REST:** Requisições HTTP com `fetch` nativo.
+```text
+==========================================
+       🔴 BEM-VINDO À POKÉDEX CLI 🔴
+==========================================
+Sua enciclopédia Pokémon no terminal!
+```
+
+```text
+------------------ MENU ------------------
+1. Buscar Pokémon por Nome ou ID na PokeApi
+2. Listar Pokémons Salvos
+3. Remover Pokémon Salvo Por Nome ou ID
+0. Sair
+------------------------------------------
+```
+
+### 1. Buscar e Salvar Pokémon
+
+**Entrada testada:**
+
+```text
+👉 Digite o Nome ou ID: pikachu
+```
+
+**Saída esperada:**
+
+```text
+==========================================
+          ✨ POKÉMON ENCONTRADO ✨
+==========================================
+🆔 ID: #25
+📛 Nome: PIKACHU
+🏷️  Tipos: electric
+📏 Altura: 0.4 m
+⚖️  Peso: 6 kg
+==========================================
+
+---------------- OPÇÕES ------------------
+1. Salvar Pokémon
+2. Buscar outro Pokémon
+3. Voltar para a tela inicial
+0. Finalizar execução
+------------------------------------------
+
+👉 Escolha uma opção: 1
+
+✅ Pokémon "PIKACHU" salvo com sucesso na memória e no arquivo local!
+```
+
+---
+
+### 2. Listar Pokémons Salvos
+
+**Entrada testada:**
+
+```text
+👉 Escolha uma opção: 2
+```
+
+**Saída esperada:**
+
+```text
+==========================================
+       📋 POKÉMONS SALVOS NA POKÉDEX
+==========================================
+Total de Pokémons salvos: 2
+
+                                                                             |
+ ID: 1 | Nome: bulbasaur | Tipos: grass, poison | Altura: 0.7m | Peso: 6.9kg |
+_____________________________________________________________________________|
+                                                                     |
+ ID: 25 | Nome: pikachu | Tipos: electric | Altura: 0.4m | Peso: 6kg |
+_____________________________________________________________________|
+```
+
+---
+
+### 3. Remover Pokémon Salvo
+
+**Entrada testada:**
+
+```text
+👉 Digite o Nome ou ID: 25
+```
+
+**Saída esperada:**
+
+```text
+✅ Pokémon "25" foi removido com sucesso da Pokédex!
+```
+
+---
+
+### 4. Exemplos de Tratamento de Erro
+
+- **Pokémon não encontrado na PokeAPI:**
+  ```text
+  ❌ Pokémon NomeInvalido não foi encontrado na Pokédex.
+  ```
+- **Pokémon já salvo na Pokédex:**
+  ```text
+  ⚠️ Pokémon (ID: 25) pikachu já está salvo na Pokédex.
+  ```
+
+## 🧠 Estrutura do projeto
+
+- **🔴 main** (`src/main.ts`): Ponto de entrada da aplicação, responsável por inicializar o terminal e o controller.
+- **🎮 Controllers (`src/controllers`):** Gerencia a interface de linha de comando (`TerminalController`), controlando a navegação nos menus via `node:readline`, capturando as entradas do usuário e exibindo as saídas formatadas.
+- **⚙️ Services (`src/services`):** Centraliza a lógica de integração externa (`PokeApiService`), realizando requisições HTTP assíncronas com o `fetch` nativo para consumir a PokeAPI.
+- **📦 Repositories (`src/repositories`):** Responsável pelo acesso e persistência de dados (`BoxService`), gerenciando tanto o estado em memória quanto a gravação/leitura no arquivo local `pc_box.json` com `node:fs/promises`.
+- **🧱 Models (`src/models`):** Define a entidade central do domínio (`Pokemon`), encapsulando seus atributos (ID, Nome, Tipos, Altura, Peso) e métodos de apresentação.
+- **🛠️ Utils (`src/utils`):** Funções utilitárias e de transformação (`PokemonMapper`), convertendo os dados brutos da PokeAPI (como altura em decímetros e peso em hectogramas) para o formato do modelo interno.
+- **🧩 Shared (`src/shared`):** Recursos compartilhados por todas as camadas, contendo interfaces de tipagem (`interfaces/`) e classes de erros personalizadas (`errors/`).
 
 ## 📅 Quadro Kanban
 
